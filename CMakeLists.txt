@@ -7,11 +7,26 @@ cmake_minimum_required(VERSION 2.8)
 include(BunsanCommon)
 
 bunsan_use_bunsan(common bacs_common)
-bunsan_use_boost(system filesystem)
+bunsan_use_boost(system filesystem regex)
 bunsan_use_protobuf()
+bunsan_use(
+    yandex_contest_common
+    yandex_contest_system
+    yandex_contest_invoker
+)
 
 bunsan_add_shared_library(${PROJECT_NAME}
+    src/builder.cpp
     src/process.cpp
+
+    src/builders/compilable.cpp
+    src/builders/native_compilable.cpp
+    src/builders/gcc.cpp
+    src/builders/fpc.cpp
+    src/builders/interpretable.cpp
+    src/builders/python.cpp
+    src/builders/java.cpp
+    src/builders/mono.cpp
 )
 
 bunsan_install_headers()
