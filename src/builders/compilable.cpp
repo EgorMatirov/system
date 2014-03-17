@@ -41,7 +41,7 @@ namespace bacs{namespace system{namespace builders
         process::setup(process_group, process, resource_limits);
         process->setCurrentPath(compilable_path / tmpdir.path().filename());
         process->setOwnerId(owner_id);
-        process->setStream(2, FDAlias(1));
+        process->setStream(2, FdAlias(1));
         process->setStream(1, File("log", AccessMode::WRITE_ONLY));
         const ProcessGroup::Result process_group_result =
             process_group->synchronizedCall();
