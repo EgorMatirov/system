@@ -19,6 +19,7 @@ bunsan_use(
 bunsan_add_shared_library(${PROJECT_NAME}
     src/builder.cpp
     src/callback.cpp
+    src/file.cpp
     src/process.cpp
 
     src/builders/compilable.cpp
