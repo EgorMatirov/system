@@ -109,7 +109,7 @@ namespace bacs{namespace system{namespace process
                 *result.mutable_resource_usage();
             resource_usage.set_time_usage_millis(
                 std::chrono::duration_cast<std::chrono::milliseconds>(
-                    process_result.resourceUsage.userTimeUsage).count());
+                    process_result.resourceUsage.timeUsage).count());
             resource_usage.set_memory_usage_bytes(
                 process_result.resourceUsage.memoryUsageBytes);
         }
