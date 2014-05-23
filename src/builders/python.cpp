@@ -62,7 +62,7 @@ if __name__=='__main__':
     try:
         py_compile.compile(src, doraise=True)
     except py_compile.PyCompileError as e:
-        print(e.msg, file=sys.stderr)
+        sys.stderr.write(e.msg)
         sys.exit(1)
 
         )EOF", name.source);
