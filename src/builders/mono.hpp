@@ -12,7 +12,7 @@ namespace bacs{namespace system{namespace builders
         explicit mono(const std::vector<std::string> &arguments);
 
     protected:
-        name_type name(const std::string &source) override;
+        name_type name(const bacs::process::Source &source) override;
 
         ProcessPointer create_process(
             const ProcessGroupPointer &process_group,

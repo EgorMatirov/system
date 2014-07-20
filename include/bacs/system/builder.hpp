@@ -56,7 +56,7 @@ namespace bacs{namespace system
         virtual executable_ptr build(
             const yandex::contest::invoker::ContainerPointer &container,
             const yandex::contest::system::unistd::access::Id &owner_id,
-            const std::string &source,
+            const bacs::process::Source &source,
             const bacs::process::ResourceLimits &resource_limits,
             bacs::process::BuildResult &result)=0;
     BUNSAN_FACTORY_END(builder)

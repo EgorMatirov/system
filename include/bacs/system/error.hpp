@@ -10,4 +10,7 @@ namespace bacs{namespace system
     {
         typedef boost::error_info<struct tag_argument, std::string> argument;
     };
+
+    struct builder_error: virtual error {};
+    struct incompatible_builder_error: virtual error {};
 }}

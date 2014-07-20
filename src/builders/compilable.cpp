@@ -15,7 +15,7 @@ namespace bacs{namespace system{namespace builders
     executable_ptr compilable::build(
         const ContainerPointer &container,
         const unistd::access::Id &owner_id,
-        const std::string &source,
+        const bacs::process::Source &source,
         const bacs::process::ResourceLimits &resource_limits,
         bacs::process::BuildResult &result)
     {
@@ -27,10 +27,15 @@ namespace bacs{namespace system{namespace builders
         container->filesystem().setOwnerId(
             compilable_path / tmpdir.path().filename(), owner_id);
         const name_type name_ = name(source);
+        if (source.has_archiver())
+            BOOST_THROW_EXCEPTION(
+                incompatible_builder_error() <<
+                incompatible_builder_error::message(
+                    "Directory tree source is not supported"));
         bunsan::filesystem::ofstream fout(tmpdir.path() / name_.source);
         BUNSAN_FILESYSTEM_FSTREAM_WRAP_BEGIN(fout)
         {
-            fout << source;
+            fout << source.data();
         }
         BUNSAN_FILESYSTEM_FSTREAM_WRAP_END(fout)
         fout.close();
@@ -64,7 +69,7 @@ namespace bacs{namespace system{namespace builders
             return executable_ptr();
     }
 
-    compilable::name_type compilable::name(const std::string &/*source*/)
+    compilable::name_type compilable::name(const bacs::process::Source &/*source*/)
     {
         return {.source = "source", .executable = "executable"};
     }

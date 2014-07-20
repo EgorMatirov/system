@@ -23,12 +23,12 @@ namespace bacs{namespace system{namespace builders
         executable_ptr build(
             const ContainerPointer &container,
             const unistd::access::Id &owner_id,
-            const std::string &source,
+            const bacs::process::Source &source,
             const bacs::process::ResourceLimits &resource_limits,
             bacs::process::BuildResult &result) override;
 
     protected:
-        virtual name_type name(const std::string &source);
+        virtual name_type name(const bacs::process::Source &source);
 
         virtual ProcessPointer create_process(
             const ProcessGroupPointer &process_group,

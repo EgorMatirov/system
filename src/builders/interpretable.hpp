@@ -5,7 +5,7 @@ namespace bacs{namespace system{namespace builders
     class interpretable: public compilable
     {
     protected:
-        name_type name(const std::string &source) override;
+        name_type name(const bacs::process::Source &source) override;
     };
 
     class interpretable_executable: public compilable_executable

@@ -2,7 +2,8 @@
 
 namespace bacs{namespace system{namespace builders
 {
-    compilable::name_type interpretable::name(const std::string &/*source*/)
+    compilable::name_type interpretable::name(
+        const bacs::process::Source &/*source*/)
     {
         static const std::string script = "script";
         return {.source = script, .executable = script};

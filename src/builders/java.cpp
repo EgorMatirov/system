@@ -56,7 +56,7 @@ namespace bacs{namespace system{namespace builders
     executable_ptr java::build(
         const ContainerPointer &container,
         const unistd::access::Id &owner_id,
-        const std::string &source,
+        const bacs::process::Source &source,
         const bacs::process::ResourceLimits &resource_limits,
         bacs::process::BuildResult &result)
     {
@@ -107,7 +107,7 @@ namespace bacs{namespace system{namespace builders
         }
     }
 
-    compilable::name_type java::name(const std::string &/*source*/)
+    compilable::name_type java::name(const bacs::process::Source &/*source*/)
     {
         return {.source = m_class + ".java", .executable = m_class};
     }
