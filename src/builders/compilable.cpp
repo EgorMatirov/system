@@ -64,9 +64,15 @@ namespace bacs{namespace system{namespace builders
         BUNSAN_FILESYSTEM_FSTREAM_WRAP_END(fin)
         fin.close();
         if (success)
+        {
+            result.set_status(bacs::process::BuildResult::OK);
             return create_executable(container, std::move(tmpdir), name_);
+        }
         else
+        {
+            result.set_status(bacs::process::BuildResult::FAILED);
             return executable_ptr();
+        }
     }
 
     compilable::name_type compilable::name(const bacs::process::Source &/*source*/)
