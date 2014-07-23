@@ -6,7 +6,12 @@ cmake_minimum_required(VERSION 2.8)
 
 include(BunsanCommon)
 
-bunsan_use_bunsan(common bacs_common)
+bunsan_use_bunsan(
+    common
+    process
+    utility
+    bacs_common
+)
 bunsan_use_xmlrpc(c++2 libwww-client)
 bunsan_use_boost(system filesystem regex)
 bunsan_use_protobuf()
@@ -30,6 +35,8 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/builders/python.cpp
     src/builders/java.cpp
     src/builders/mono.cpp
+
+    src/builders/project.cpp
 
     src/callbacks/xmlrpc.cpp
 )
