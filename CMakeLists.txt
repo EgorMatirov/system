@@ -37,6 +37,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/builders/mono.cpp
 
     src/builders/project.cpp
+    src/builders/mono_develop.cpp
 
     src/callbacks/xmlrpc.cpp
 )
