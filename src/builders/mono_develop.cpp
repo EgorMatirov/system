@@ -190,6 +190,7 @@ if __name__ == '__main__':
         result.set_output(file::read_first(tmpdir.path() / "log", 4096));
         if (success)
         {
+            result.set_status(bacs::process::BuildResult::OK);
             executable_ptr tmp(new project_executable(
                 container,
                 std::move(tmpdir),
@@ -199,6 +200,7 @@ if __name__ == '__main__':
         }
         else
         {
+            result.set_status(bacs::process::BuildResult::FAILED);
             return executable_ptr();
         }
     }
