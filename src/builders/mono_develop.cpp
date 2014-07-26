@@ -176,7 +176,8 @@ if __name__ == '__main__':
             "-c", sln_builder,
             "--configuration", m_configuration,
             "--output", executable,
-            source);
+            solution
+        );
         process::setup(process_group, process, resource_limits);
         process->setCurrentPath(root);
         process->setOwnerId(owner_id);
