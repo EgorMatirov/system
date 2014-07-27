@@ -10,6 +10,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/scope_exit.hpp>
 
 namespace bacs{namespace system{namespace builders
 {
@@ -66,7 +67,6 @@ namespace bacs{namespace system{namespace builders
     }
 
     static void pre_build(
-        const ContainerPointer &container,
         const unistd::access::Id &owner_id,
         const boost::filesystem::path &root)
     {
@@ -77,13 +77,9 @@ namespace bacs{namespace system{namespace builders
         {
             unistd::lchown(i->path(), owner_id);
         }
-        BOOST_VERIFY(boost::filesystem::create_directory(
-            container->filesystem().keepInRoot("/tmp")));
-        container->filesystem().setMode("/tmp", 01777);
     }
 
     static void post_build(
-        const ContainerPointer &container,
         const unistd::access::Id &/*owner_id*/,
         const boost::filesystem::path &root)
     {
@@ -101,8 +97,6 @@ namespace bacs{namespace system{namespace builders
                 boost::filesystem::others_write
             );
         }
-        boost::filesystem::remove_all(
-            container->filesystem().keepInRoot("/tmp"));
     }
 
     executable_ptr project::build(
@@ -131,16 +125,27 @@ namespace bacs{namespace system{namespace builders
             return executable_ptr();
         }
 
-        pre_build(container, owner_id, tmpdir.path());
+        BOOST_VERIFY(boost::filesystem::create_directory(
+            container->filesystem().keepInRoot("/tmp")));
+        container->filesystem().setMode("/tmp", 01777);
+        BOOST_SCOPE_EXIT_ALL(&)
+        {
+            boost::filesystem::remove_all(
+                container->filesystem().keepInRoot("/tmp"));
+        };
+
+        const boost::filesystem::path root = tmpdir.path();
+        pre_build(owner_id, root);
         const executable_ptr exe = build_extracted(
             container,
             owner_id,
             std::move(tmpdir),
-            project_path / tmpdir.path().filename() / source_path,
+            project_path / root.filename() / source_path,
             resource_limits,
             result
         );
-        post_build(container, owner_id, tmpdir.path());
+        if (exe)
+            post_build(owner_id, root);
         return exe;
     }
 
