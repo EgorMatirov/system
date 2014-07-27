@@ -188,7 +188,7 @@ if __name__ == '__main__':
         const Process::Result process_result = process->result();
         const bool success = process::parse_result(
             process_group_result, process_result, *result.mutable_execution());
-        result.set_output(file::read_first(tmpdir.path() / "log", 4096));
+        result.set_output(file::read_first(tmpdir.path() / "log", 65536));
         if (success)
         {
             result.set_status(bacs::process::BuildResult::OK);
