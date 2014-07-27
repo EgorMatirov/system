@@ -195,7 +195,7 @@ if __name__ == '__main__':
             executable_ptr tmp(new project_executable(
                 container,
                 std::move(tmpdir),
-                executable
+                executable_path
             ));
             return tmp;
         }
