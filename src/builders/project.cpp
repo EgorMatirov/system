@@ -70,7 +70,7 @@ namespace bacs{namespace system{namespace builders
         const unistd::access::Id &owner_id,
         const boost::filesystem::path &root)
     {
-        for (recursive_directory_iterator i(root / source_path),
+        for (recursive_directory_iterator i(root),
                                           end;
              i != end;
              ++i)
@@ -83,7 +83,7 @@ namespace bacs{namespace system{namespace builders
         const unistd::access::Id &/*owner_id*/,
         const boost::filesystem::path &root)
     {
-        for (recursive_directory_iterator i(root / source_path),
+        for (recursive_directory_iterator i(root),
                                           end;
              i != end;
              ++i)
