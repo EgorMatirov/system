@@ -19,14 +19,14 @@ namespace bacs{namespace system{namespace builders
     static const boost::filesystem::path source_path = "source";
     static const boost::filesystem::path source_archive_path = "source_archive";
 
+    using boost::filesystem::recursive_directory_iterator;
+
     static bool extract(
         const bacs::process::Source &source,
         const boost::filesystem::path &root,
-        const unistd::access::Id &owner_id,
         std::string &error)
     {
         using namespace bunsan::utility;
-        using boost::filesystem::recursive_directory_iterator;
 
         if (!source.has_archiver())
             BOOST_THROW_EXCEPTION(
@@ -56,14 +56,6 @@ namespace bacs{namespace system{namespace builders
                 root / source_archive_path,
                 root / source_path
             );
-
-            for (recursive_directory_iterator i(root / source_path),
-                                              end;
-                 i != end;
-                 ++i)
-            {
-                unistd::lchown(i->path(), owner_id);
-            }
         }
         catch (std::exception &e)
         {
@@ -71,6 +63,46 @@ namespace bacs{namespace system{namespace builders
             return false;
         }
         return true;
+    }
+
+    static void pre_build(
+        const ContainerPointer &container,
+        const unistd::access::Id &owner_id,
+        const boost::filesystem::path &root)
+    {
+        for (recursive_directory_iterator i(root / source_path),
+                                          end;
+             i != end;
+             ++i)
+        {
+            unistd::lchown(i->path(), owner_id);
+        }
+        BOOST_VERIFY(boost::filesystem::create_directory(
+            container->filesystem().keepInRoot("/tmp")));
+        container->filesystem().setMode("/tmp", 01777);
+    }
+
+    static void post_build(
+        const ContainerPointer &container,
+        const unistd::access::Id &/*owner_id*/,
+        const boost::filesystem::path &root)
+    {
+        for (recursive_directory_iterator i(root / source_path),
+                                          end;
+             i != end;
+             ++i)
+        {
+            unistd::lchown(i->path(), unistd::access::Id{0, 0});
+            boost::filesystem::permissions(
+                *i,
+                boost::filesystem::remove_perms &
+                boost::filesystem::owner_write &
+                boost::filesystem::group_write &
+                boost::filesystem::others_write
+            );
+        }
+        boost::filesystem::remove_all(
+            container->filesystem().keepInRoot("/tmp"));
     }
 
     executable_ptr project::build(
@@ -90,14 +122,17 @@ namespace bacs{namespace system{namespace builders
         BOOST_VERIFY(boost::filesystem::create_directory(
             tmpdir.path() / source_path
         ));
+
         std::string error;
-        if (!extract(source, tmpdir.path(), owner_id, error))
+        if (!extract(source, tmpdir.path(), error))
         {
             result.set_status(bacs::process::BuildResult::FAILED);
             result.set_output(error);
             return executable_ptr();
         }
-        return build_extracted(
+
+        pre_build(container, owner_id, tmpdir.path());
+        const executable_ptr exe = build_extracted(
             container,
             owner_id,
             std::move(tmpdir),
@@ -105,6 +140,8 @@ namespace bacs{namespace system{namespace builders
             resource_limits,
             result
         );
+        post_build(container, owner_id, tmpdir.path());
+        return exe;
     }
 
     project_executable::project_executable(
