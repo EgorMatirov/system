@@ -91,9 +91,9 @@ namespace bacs{namespace system{namespace builders
             unistd::lchown(i->path(), unistd::access::Id{0, 0});
             boost::filesystem::permissions(
                 *i,
-                boost::filesystem::remove_perms &
-                boost::filesystem::owner_write &
-                boost::filesystem::group_write &
+                boost::filesystem::remove_perms |
+                boost::filesystem::owner_write |
+                boost::filesystem::group_write |
                 boost::filesystem::others_write
             );
         }
