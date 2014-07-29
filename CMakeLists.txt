@@ -22,24 +22,24 @@ bunsan_use(
 )
 
 bunsan_add_shared_library(${PROJECT_NAME}
-    src/builder.cpp
-    src/callback.cpp
-    src/file.cpp
-    src/process.cpp
+    src/lib/builder.cpp
+    src/lib/callback.cpp
+    src/lib/file.cpp
+    src/lib/process.cpp
 
-    src/builders/compilable.cpp
-    src/builders/native_compilable.cpp
-    src/builders/gcc.cpp
-    src/builders/fpc.cpp
-    src/builders/interpretable.cpp
-    src/builders/python.cpp
-    src/builders/java.cpp
-    src/builders/mono.cpp
+    src/lib/builders/compilable.cpp
+    src/lib/builders/native_compilable.cpp
+    src/lib/builders/gcc.cpp
+    src/lib/builders/fpc.cpp
+    src/lib/builders/interpretable.cpp
+    src/lib/builders/python.cpp
+    src/lib/builders/java.cpp
+    src/lib/builders/mono.cpp
 
-    src/builders/project.cpp
-    src/builders/mono_develop.cpp
+    src/lib/builders/project.cpp
+    src/lib/builders/mono_develop.cpp
 
-    src/callbacks/xmlrpc.cpp
+    src/lib/callbacks/xmlrpc.cpp
 )
 
 bunsan_install_headers()
