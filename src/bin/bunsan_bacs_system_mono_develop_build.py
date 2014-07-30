@@ -63,4 +63,4 @@ if __name__ == '__main__':
     with open(args.output, 'w') as out:
         print('#!/bin/sh -e', file=out)
         print('exec', shlex.quote(abspath(exe)), '"$@"', file=out)
-    os.chmod(args.output, 0o777)
+        os.fchmod(out.fileno(), os.fstat(out.fileno()).st_mode | 0o111)
