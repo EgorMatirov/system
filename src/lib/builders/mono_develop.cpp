@@ -55,72 +55,8 @@ namespace bacs{namespace system{namespace builders
         }
     }
 
-    static const std::string sln_builder = R"EOF(
-import argparse
-from os.path import abspath, join, basename, dirname, isfile
-import xml.etree.ElementTree as etree
-import os
-import subprocess
-import shutil
-import shlex
-
-
-def getprojectinfo(csproj):
-    tree = etree.parse(csproj)
-    schema = tree.getroot().tag.strip('Project')
-    for prop in tree.getroot().findall(schema + 'PropertyGroup'):
-        outputtypeprop = prop.find(schema + 'OutputType')
-        if outputtypeprop is not None:
-            outtype = outputtypeprop.text
-        name = prop.find(schema + 'AssemblyName')
-        if name is not None:
-            projName = name.text
-    return (projName, outtype)
-
-
-def GetExecutableProjectPath(solution, configuration):
-    with open(solution, 'r') as f:
-        for line in f:
-            if line.startswith('Project'):
-                words = [x.strip().strip('"') for x in line.split(',')]
-                csproj = join(dirname(solution), words[1].replace('\\', '/'))
-                proj = dirname(csproj)
-                projname, projtype = getprojectinfo(csproj)
-                if projtype == 'Exe':
-                    return join(
-                        proj,
-                        'bin',
-                        configuration,
-                        projname + '.' + 'exe'
-                    )
-        return None
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='Extracts executable name from *.sln'
-    )
-    parser.add_argument('solution',
-                        help='Solution file (*.sln)')
-    parser.add_argument('-c', '--configuration',
-                        default='Release',
-                        help='Configuration')
-    parser.add_argument('-o', '--output',
-                        required=True,
-                        help='Output file')
-    args = parser.parse_args()
-
-    subprocess.check_call([
-        'xbuild',
-        '/property:Configuration={}'.format(args.configuration),
-        args.solution
-    ])
-    exe = GetExecutableProjectPath(args.solution, args.configuration)
-    with open(args.output, 'w') as out:
-        print('#!/bin/sh -e', file=out)
-        print('exec', shlex.quote(abspath(exe)), '"$@"', file=out)
-    os.chmod(args.output, 0o777)
-)EOF";
+    static const std::string sln_builder =
+        "bunsan_bacs_system_mono_develop_build";
 
     static boost::filesystem::path executable_path = "executable";
 
@@ -170,10 +106,9 @@ if __name__ == '__main__':
 
         const boost::filesystem::path executable = root / executable_path;
         const ProcessGroupPointer process_group = container->createProcessGroup();
-        const ProcessPointer process = process_group->createProcess("python3");
+        const ProcessPointer process = process_group->createProcess(sln_builder);
         process->setArguments(
             process->executable(),
-            "-c", sln_builder,
             "--configuration", m_configuration,
             "--output", executable,
             solution

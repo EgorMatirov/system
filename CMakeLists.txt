@@ -44,5 +44,9 @@ bunsan_add_shared_library(${PROJECT_NAME}
 
 bunsan_install_headers()
 bunsan_install_targets(${PROJECT_NAME})
+bunsan_install_programs(
+    src/bin/${PROJECT_NAME}_mono_develop_build.py
+    RENAME ${PROJECT_NAME}_mono_develop_build
+)
 
 bunsan_include_tests()
