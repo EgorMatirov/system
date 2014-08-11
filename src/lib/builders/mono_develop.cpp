@@ -56,7 +56,7 @@ namespace bacs{namespace system{namespace builders
     }
 
     static const std::string sln_builder =
-        "bunsan_bacs_system_mono_develop_build";
+        "bunsan_bacs_system_build_mono_develop";
 
     static boost::filesystem::path executable_path = "executable";
 
