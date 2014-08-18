@@ -8,7 +8,9 @@ namespace bacs{namespace system{namespace builders
         const name_type &name)
     {
         executable_ptr tmp(
-            new native_compilable_executable(container, std::move(tmpdir), name)
+            new native_compilable_executable(
+                container, std::move(tmpdir), name
+            )
         );
         return tmp;
     }

@@ -35,14 +35,16 @@ namespace bacs{namespace system{namespace builders
             /*else if (boost::regex_match(arg, match, key_value))
             {
                 BOOST_ASSERT(match.size() == 3);
-                const std::string key = match[1].str(), value = match[2].str();
+                const std::string key = match[1].str(),
+                                  value = match[2].str();
                 if (false)
                 {
                 }
                 else
                 {
-                    BOOST_THROW_EXCEPTION(invalid_argument_error() <<
-                                          invalid_argument_error::argument(arg));
+                    BOOST_THROW_EXCEPTION(
+                        invalid_argument_error() <<
+                        invalid_argument_error::argument(arg));
                 }
             }*/
             else
@@ -76,7 +78,9 @@ namespace bacs{namespace system{namespace builders
             else
             {
                 boost::smatch match;
-                if (boost::regex_match(result.output(), match, filename_error))
+                if (boost::regex_match(result.output(),
+                                       match,
+                                       filename_error))
                 {
                     BOOST_ASSERT(match.size() == 2);
                     m_java->m_class = match[1];

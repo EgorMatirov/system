@@ -34,7 +34,8 @@ namespace bacs{namespace system{namespace builders
             if (boost::regex_match(arg, match, key_value))
             {
                 BOOST_ASSERT(match.size() == 3);
-                const std::string key = match[1].str(), value = match[2].str();
+                const std::string key = match[1].str(),
+                                  value = match[2].str();
                 if (key == "configuration")
                 {
                     m_configuration = value;
@@ -89,7 +90,8 @@ namespace bacs{namespace system{namespace builders
                 {
                     result.set_status(bacs::process::BuildResult::FAILED);
                     result.set_output(str(
-                        boost::format("Multiple solutions found: %1% and %2%") %
+                        boost::format("Multiple solutions found: "
+                                      "%1% and %2%") %
                         solution %
                         i->path()
                     ));
@@ -105,8 +107,10 @@ namespace bacs{namespace system{namespace builders
         solution = container->filesystem().containerPath(solution);
 
         const boost::filesystem::path executable = root / executable_path;
-        const ProcessGroupPointer process_group = container->createProcessGroup();
-        const ProcessPointer process = process_group->createProcess(sln_builder);
+        const ProcessGroupPointer process_group =
+            container->createProcessGroup();
+        const ProcessPointer process =
+            process_group->createProcess(sln_builder);
         process->setArguments(
             process->executable(),
             "--configuration", m_configuration,
@@ -122,7 +126,10 @@ namespace bacs{namespace system{namespace builders
             process_group->synchronizedCall();
         const Process::Result process_result = process->result();
         const bool success = process::parse_result(
-            process_group_result, process_result, *result.mutable_execution());
+            process_group_result,
+            process_result,
+            *result.mutable_execution()
+        );
         result.set_output(file::read_first(tmpdir.path() / "log", 65536));
         if (success)
         {

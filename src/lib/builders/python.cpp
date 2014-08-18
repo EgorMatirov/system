@@ -26,7 +26,8 @@ namespace bacs{namespace system{namespace builders
             else */if (boost::regex_match(arg, match, key_value))
             {
                 BOOST_ASSERT(match.size() == 3);
-                const std::string key = match[1].str(), value = match[2].str();
+                const std::string key = match[1].str(),
+                                  value = match[2].str();
                 if (key == "lang")
                 {
                     m_lang = value;

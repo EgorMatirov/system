@@ -17,8 +17,10 @@ namespace bacs{namespace system{namespace builders
     static const boost::filesystem::path project_path =
         "/builders_project";
 
-    static const boost::filesystem::path source_path = "source";
-    static const boost::filesystem::path source_archive_path = "source_archive";
+    static const boost::filesystem::path source_path =
+        "source";
+    static const boost::filesystem::path source_archive_path =
+        "source_archive";
 
     using boost::filesystem::recursive_directory_iterator;
 
