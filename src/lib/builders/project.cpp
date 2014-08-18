@@ -98,6 +98,21 @@ namespace bacs{namespace system{namespace builders
                 boost::filesystem::group_write |
                 boost::filesystem::others_write
             );
+            boost::filesystem::permissions(
+                *i,
+                boost::filesystem::add_perms |
+                boost::filesystem::owner_read |
+                boost::filesystem::group_read |
+                boost::filesystem::others_read
+            );
+            if (i->status().permissions() & boost::filesystem::owner_exe)
+                boost::filesystem::permissions(
+                    *i,
+                    boost::filesystem::add_perms |
+                    boost::filesystem::owner_exe |
+                    boost::filesystem::group_exe |
+                    boost::filesystem::others_exe
+                );
         }
     }
 
