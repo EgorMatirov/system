@@ -104,6 +104,12 @@ namespace bacs{namespace system{namespace builders
                 }
             }
         }
+        if (!found)
+        {
+            result.set_status(bacs::process::BuildResult::FAILED);
+            result.set_output("Solution (*.sln) not found");
+            return executable_ptr();
+        }
         solution = container->filesystem().containerPath(solution);
 
         const boost::filesystem::path executable = root / executable_path;
