@@ -13,5 +13,4 @@ namespace bacs{namespace system
 
     struct builder_error: virtual error {};
     struct builder_build_error: virtual builder_error {};
-    struct incompatible_builder_error: virtual error {};
 }}

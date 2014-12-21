@@ -30,10 +30,11 @@ namespace bacs{namespace system{namespace builders
                 compilable_path / tmpdir.path().filename(), owner_id);
             const name_type name_ = name(source);
             if (source.has_archiver())
-                BOOST_THROW_EXCEPTION(
-                    incompatible_builder_error() <<
-                    incompatible_builder_error::message(
-                        "Directory tree source is not supported"));
+            {
+                result.set_status(bacs::process::BuildResult::FAILED);
+                result.set_output("Directory tree source is not supported");
+                return executable_ptr();
+            }
             bunsan::filesystem::ofstream fout(tmpdir.path() / name_.source);
             BUNSAN_FILESYSTEM_FSTREAM_WRAP_BEGIN(fout)
             {

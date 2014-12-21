@@ -31,11 +31,7 @@ namespace bacs{namespace system{namespace builders
     {
         using namespace bunsan::utility;
 
-        if (!source.has_archiver())
-            BOOST_THROW_EXCEPTION(
-                incompatible_builder_error() <<
-                incompatible_builder_error::message(
-                    "Directory tree source is required"));
+        BOOST_ASSERT(source.has_archiver());
 
         boost::property_tree::ptree config;
         if (source.archiver().has_format())
@@ -125,6 +121,12 @@ namespace bacs{namespace system{namespace builders
     {
         try
         {
+            if (!source.has_archiver())
+            {
+                result.set_status(bacs::process::BuildResult::FAILED);
+                result.set_output("Directory tree source is required");
+                return executable_ptr();
+            }
             const boost::filesystem::path solutions =
                 container->filesystem().keepInRoot(project_path);
             boost::filesystem::create_directories(solutions);
