@@ -62,52 +62,61 @@ namespace bacs{namespace system{namespace builders
         const bacs::process::ResourceLimits &resource_limits,
         bacs::process::BuildResult &result)
     {
-        if (m_java)
+        try
         {
-            const executable_ptr solution = m_java->build(
-                container,
-                owner_id,
-                source,
-                resource_limits,
-                result
-            );
-            if (solution)
+            if (m_java)
             {
-                return solution;
-            }
-            else
-            {
-                boost::smatch match;
-                if (boost::regex_match(result.output(),
-                                       match,
-                                       filename_error))
+                const executable_ptr solution = m_java->build(
+                    container,
+                    owner_id,
+                    source,
+                    resource_limits,
+                    result
+                );
+                if (solution)
                 {
-                    BOOST_ASSERT(match.size() == 2);
-                    m_java->m_class = match[1];
-                    return m_java->build(
-                        container,
-                        owner_id,
-                        source,
-                        resource_limits,
-                        result
-                    );
+                    return solution;
                 }
                 else
                 {
-                    return solution; // null
+                    boost::smatch match;
+                    if (boost::regex_match(result.output(),
+                                           match,
+                                           filename_error))
+                    {
+                        BOOST_ASSERT(match.size() == 2);
+                        m_java->m_class = match[1];
+                        return m_java->build(
+                            container,
+                            owner_id,
+                            source,
+                            resource_limits,
+                            result
+                        );
+                    }
+                    else
+                    {
+                        return solution; // null
+                    }
                 }
             }
+            else
+            {
+                // nested object
+                return compilable::build(
+                    container,
+                    owner_id,
+                    source,
+                    resource_limits,
+                    result
+                );
+            }
         }
-        else
+        catch (std::exception &)
         {
-            // nested object
-            return compilable::build(
-                container,
-                owner_id,
-                source,
-                resource_limits,
-                result
-            );
+            BOOST_THROW_EXCEPTION(
+                builder_build_error() <<
+                bunsan::enable_nested_current());
         }
     }
 

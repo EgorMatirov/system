@@ -123,47 +123,56 @@ namespace bacs{namespace system{namespace builders
         const bacs::process::ResourceLimits &resource_limits,
         bacs::process::BuildResult &result)
     {
-        const boost::filesystem::path solutions =
-            container->filesystem().keepInRoot(project_path);
-        boost::filesystem::create_directories(solutions);
-        bunsan::tempfile tmpdir =
-            bunsan::tempfile::directory_in_directory(solutions);
-        container->filesystem().setOwnerId(
-            project_path / tmpdir.path().filename(), owner_id);
-        BOOST_VERIFY(boost::filesystem::create_directory(
-            tmpdir.path() / source_path
-        ));
-
-        std::string error;
-        if (!extract(source, tmpdir.path(), error))
+        try
         {
-            result.set_status(bacs::process::BuildResult::FAILED);
-            result.set_output(error);
-            return executable_ptr();
+            const boost::filesystem::path solutions =
+                container->filesystem().keepInRoot(project_path);
+            boost::filesystem::create_directories(solutions);
+            bunsan::tempfile tmpdir =
+                bunsan::tempfile::directory_in_directory(solutions);
+            container->filesystem().setOwnerId(
+                project_path / tmpdir.path().filename(), owner_id);
+            BOOST_VERIFY(boost::filesystem::create_directory(
+                tmpdir.path() / source_path
+            ));
+
+            std::string error;
+            if (!extract(source, tmpdir.path(), error))
+            {
+                result.set_status(bacs::process::BuildResult::FAILED);
+                result.set_output(error);
+                return executable_ptr();
+            }
+
+            BOOST_VERIFY(boost::filesystem::create_directory(
+                container->filesystem().keepInRoot("/tmp")));
+            container->filesystem().setMode("/tmp", 01777);
+            BOOST_SCOPE_EXIT_ALL(&)
+            {
+                boost::filesystem::remove_all(
+                    container->filesystem().keepInRoot("/tmp"));
+            };
+
+            const boost::filesystem::path root = tmpdir.path();
+            pre_build(owner_id, root);
+            const executable_ptr exe = build_extracted(
+                container,
+                owner_id,
+                std::move(tmpdir),
+                project_path / root.filename() / source_path,
+                resource_limits,
+                result
+            );
+            if (exe)
+                post_build(owner_id, root);
+            return exe;
         }
-
-        BOOST_VERIFY(boost::filesystem::create_directory(
-            container->filesystem().keepInRoot("/tmp")));
-        container->filesystem().setMode("/tmp", 01777);
-        BOOST_SCOPE_EXIT_ALL(&)
+        catch (std::exception &)
         {
-            boost::filesystem::remove_all(
-                container->filesystem().keepInRoot("/tmp"));
-        };
-
-        const boost::filesystem::path root = tmpdir.path();
-        pre_build(owner_id, root);
-        const executable_ptr exe = build_extracted(
-            container,
-            owner_id,
-            std::move(tmpdir),
-            project_path / root.filename() / source_path,
-            resource_limits,
-            result
-        );
-        if (exe)
-            post_build(owner_id, root);
-        return exe;
+            BOOST_THROW_EXCEPTION(
+                builder_build_error() <<
+                bunsan::enable_nested_current());
+        }
     }
 
     project_executable::project_executable(
