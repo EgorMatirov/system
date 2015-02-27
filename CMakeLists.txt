@@ -2,24 +2,9 @@ project(bunsan_bacs_system)
 
 include(${CMAKE_SOURCE_DIR}/system-config.cmake OPTIONAL)
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
-include(BunsanCommon)
-
-bunsan_use_bunsan(
-    common
-    process
-    utility
-    bacs_common
-)
-bunsan_use_xmlrpc(c++2 libwww-client)
-bunsan_use_boost(system filesystem regex)
-bunsan_use_protobuf()
-bunsan_use(
-    yandex_contest_common
-    yandex_contest_system
-    yandex_contest_invoker
-)
+find_package(BunsanCMake CONFIG REQUIRED)
 
 bunsan_add_shared_library(${PROJECT_NAME}
     src/lib/builder.cpp
@@ -41,6 +26,10 @@ bunsan_add_shared_library(${PROJECT_NAME}
 
     src/lib/callbacks/xmlrpc.cpp
 )
+bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_utility bunsan_utility)
+bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_bacs_common bunsan_bacs_common)
+bunsan_use_bunsan_package(${PROJECT_NAME} yandex_contest_invoker yandex_contest_invoker)
+bunsan_use_package(${PROJECT_NAME} XMLRPC c++2 libwww-client)
 
 bunsan_install_headers()
 bunsan_install_targets(${PROJECT_NAME})
@@ -48,5 +37,6 @@ bunsan_install_programs(
     src/bin/${PROJECT_NAME}_build_mono_develop.py
     RENAME ${PROJECT_NAME}_build_mono_develop
 )
+bunsan_install_project()
 
 bunsan_include_tests()
