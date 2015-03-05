@@ -1,5 +1,7 @@
 #include "gcc.hpp"
 
+#include <bunsan/static_initializer.hpp>
+
 #include <boost/assert.hpp>
 #include <boost/regex.hpp>
 
@@ -12,12 +14,15 @@ namespace bacs{namespace system{namespace builders
         struct invalid_lang_error: virtual invalid_argument_error {};
     }
 
-    const bool gcc::factory_reg_hook = builder::register_new("gcc",
-        [](const std::vector<std::string> &arguments)
-        {
-            builder_ptr tmp(new gcc(arguments));
-            return tmp;
-        });
+    BUNSAN_STATIC_INITIALIZER(bacs_system_builders_gcc,
+    {
+        BUNSAN_FACTORY_REGISTER_TOKEN(builder, gcc,
+            [](const std::vector<std::string> &arguments)
+            {
+                builder_ptr tmp(new gcc(arguments));
+                return tmp;
+            })
+    })
 
     static const boost::regex positional("[^=]+"), key_value("([^=]+)=(.*)");
 

@@ -26,8 +26,5 @@ namespace bacs{namespace system{namespace builders
     private:
         std::string m_lang;
         std::vector<std::string> m_flags;
-
-    private:
-        static const bool factory_reg_hook;
     };
 }}}

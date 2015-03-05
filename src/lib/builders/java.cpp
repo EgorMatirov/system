@@ -1,17 +1,22 @@
 #include "java.hpp"
 
+#include <bunsan/static_initializer.hpp>
+
 #include <boost/assert.hpp>
 #include <boost/regex.hpp>
 #include <boost/scope_exit.hpp>
 
 namespace bacs{namespace system{namespace builders
 {
-    const bool java::factory_reg_hook = builder::register_new("java",
-        [](const std::vector<std::string> &arguments)
-        {
-            builder_ptr tmp(new java(arguments));
-            return tmp;
-        });
+    BUNSAN_STATIC_INITIALIZER(bacs_system_builders_java,
+    {
+        BUNSAN_FACTORY_REGISTER_TOKEN(builder, java,
+            [](const std::vector<std::string> &arguments)
+            {
+                builder_ptr tmp(new java(arguments));
+                return tmp;
+            })
+    })
 
     static const boost::regex positional("[^=]+");
     static const boost::regex key_value("([^=]+)=(.*)");

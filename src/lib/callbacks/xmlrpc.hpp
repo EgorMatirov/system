@@ -20,8 +20,5 @@ namespace bacs{namespace system{namespace callback{namespace callbacks
         std::string m_uri;
         std::string m_method;
         xmlrpc_c::paramList m_arguments;
-
-    private:
-        static const bool factory_reg_hook;
     };
 }}}}

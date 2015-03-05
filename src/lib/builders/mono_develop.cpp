@@ -3,6 +3,8 @@
 #include <bacs/system/file.hpp>
 #include <bacs/system/process.hpp>
 
+#include <bunsan/static_initializer.hpp>
+
 #include <boost/assert.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/format.hpp>
@@ -15,13 +17,15 @@ namespace bacs{namespace system{namespace builders
         struct invalid_lang_error: virtual invalid_argument_error {};
     }
 
-    const bool mono_develop::factory_reg_hook = builder::register_new(
-        "mono_develop",
-        [](const std::vector<std::string> &arguments)
-        {
-            builder_ptr tmp(new mono_develop(arguments));
-            return tmp;
-        });
+    BUNSAN_STATIC_INITIALIZER(bacs_system_builders_mono_develop,
+    {
+        BUNSAN_FACTORY_REGISTER_TOKEN(builder, mono_develop,
+            [](const std::vector<std::string> &arguments)
+            {
+                builder_ptr tmp(new mono_develop(arguments));
+                return tmp;
+            })
+    })
 
     static const boost::regex positional("[^=]+"), key_value("([^=]+)=(.*)");
 

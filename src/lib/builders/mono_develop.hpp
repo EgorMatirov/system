@@ -20,8 +20,5 @@ namespace bacs{namespace system{namespace builders
 
     private:
         std::string m_configuration;
-
-    private:
-        static const bool factory_reg_hook;
     };
 }}}

@@ -1,18 +1,22 @@
 #include "xmlrpc.hpp"
 
 #include <bunsan/enable_error_info.hpp>
+#include <bunsan/static_initializer.hpp>
 
 #define BUNSAN_EXCEPTIONS_WRAP_END_XMLRPC() \
     BUNSAN_EXCEPTIONS_WRAP_END_EXCEPT(::girerr::error)
 
 namespace bacs{namespace system{namespace callback{namespace callbacks
 {
-    const bool xmlrpc::factory_reg_hook = base::register_new("xmlrpc",
-        [](const std::vector<std::string> &arguments)
-        {
-            const base_ptr tmp(new xmlrpc(arguments));
-            return tmp;
-        });
+    BUNSAN_STATIC_INITIALIZER(bacs_system_callback_callbacks_xmlrpc,
+    {
+        BUNSAN_FACTORY_REGISTER_TOKEN(base, xmlrpc,
+            [](const std::vector<std::string> &arguments)
+            {
+                const base_ptr tmp(new xmlrpc(arguments));
+                return tmp;
+            })
+    })
 
     xmlrpc::xmlrpc(const std::vector<std::string> &arguments)
     {

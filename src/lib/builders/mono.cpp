@@ -1,16 +1,21 @@
 #include "mono.hpp"
 
+#include <bunsan/static_initializer.hpp>
+
 #include <boost/assert.hpp>
 #include <boost/regex.hpp>
 
 namespace bacs{namespace system{namespace builders
 {
-    const bool mono::factory_reg_hook = builder::register_new("mono",
-        [](const std::vector<std::string> &arguments)
-        {
-            builder_ptr tmp(new mono(arguments));
-            return tmp;
-        });
+    BUNSAN_STATIC_INITIALIZER(bacs_system_builders_mono,
+    {
+        BUNSAN_FACTORY_REGISTER_TOKEN(builder, mono,
+            [](const std::vector<std::string> &arguments)
+            {
+                builder_ptr tmp(new mono(arguments));
+                return tmp;
+            })
+    })
 
     static const boost::regex positional("[^=]+"), key_value("([^=]+)=(.*)");
 

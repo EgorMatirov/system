@@ -37,9 +37,6 @@ namespace bacs{namespace system{namespace builders
         std::string m_class = "Main";
         std::string m_lang;
         std::vector<std::string> m_flags;
-
-    private:
-        static const bool factory_reg_hook;
     };
 
     class java_executable: public interpretable_executable

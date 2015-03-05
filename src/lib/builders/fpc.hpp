@@ -14,8 +14,5 @@ namespace bacs{namespace system{namespace builders
 
     private:
         std::vector<std::string> m_flags;
-
-    private:
-        static const bool factory_reg_hook;
     };
 }}}
