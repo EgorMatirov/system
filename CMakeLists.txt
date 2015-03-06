@@ -6,7 +6,7 @@ project(bunsan_bacs_system)
 
 find_package(BunsanCMake CONFIG REQUIRED)
 
-bunsan_add_shared_library(${PROJECT_NAME}
+bunsan_add_library(${PROJECT_NAME}
     src/lib/builder.cpp
     src/lib/callback.cpp
     src/lib/file.cpp
