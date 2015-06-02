@@ -6,7 +6,7 @@
 
 #include <bunsan/filesystem/fstream.hpp>
 #include <bunsan/utility/archiver.hpp>
-#include <bunsan/utility/resolver.hpp>
+#include <bunsan/utility/system_resolver.hpp>
 
 #include <boost/assert.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -36,7 +36,7 @@ namespace bacs{namespace system{namespace builders
         boost::property_tree::ptree config;
         if (source.archiver().has_format())
             config.put("format", source.archiver().format());
-        resolver rs;
+        system_resolver rs;
         const archiver_ptr ar =
             archiver::instance(source.archiver().type(), rs);
         ar->setup(config);
