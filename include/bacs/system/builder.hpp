@@ -47,7 +47,7 @@ namespace bacs{namespace system
     class builder: private boost::noncopyable
     BUNSAN_FACTORY_BEGIN(builder, const std::vector<std::string> &/*arguments*/)
     public:
-        static builder_ptr instance(const bacs::process::Builder &config);
+        static builder_ptr instance(const bacs::process::BuilderConfig &config);
 
     public:
         virtual ~builder() {}
