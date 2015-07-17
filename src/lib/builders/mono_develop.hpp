@@ -2,23 +2,25 @@
 
 #include "project.hpp"
 
-namespace bacs{namespace system{namespace builders
-{
-    class mono_develop: public project
-    {
-    public:
-        explicit mono_develop(const std::vector<std::string> &arguments);
+namespace bacs {
+namespace system {
+namespace builders {
 
-    protected:
-        executable_ptr build_extracted(
-            const ContainerPointer &container,
-            const unistd::access::Id &owner_id,
-            bunsan::tempfile &&tmpdir,
-            const boost::filesystem::path &source,
-            const bacs::process::ResourceLimits &resource_limits,
-            bacs::process::BuildResult &result) override;
+class mono_develop : public project {
+ public:
+  explicit mono_develop(const std::vector<std::string> &arguments);
 
-    private:
-        std::string m_configuration;
-    };
-}}}
+ protected:
+  executable_ptr build_extracted(
+      const ContainerPointer &container, const unistd::access::Id &owner_id,
+      bunsan::tempfile &&tmpdir, const boost::filesystem::path &source,
+      const bacs::process::ResourceLimits &resource_limits,
+      bacs::process::BuildResult &result) override;
+
+ private:
+  std::string m_configuration;
+};
+
+}  // namespace builders
+}  // namespace system
+}  // namespace bacs

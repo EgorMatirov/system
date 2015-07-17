@@ -4,27 +4,29 @@
 
 #include <memory>
 
-namespace bacs{namespace system{namespace builders
-{
-    class mono: public interpretable
-    {
-    public:
-        explicit mono(const std::vector<std::string> &arguments);
+namespace bacs {
+namespace system {
+namespace builders {
 
-    protected:
-        name_type name(const bacs::process::Source &source) override;
+class mono : public interpretable {
+ public:
+  explicit mono(const std::vector<std::string> &arguments);
 
-        ProcessPointer create_process(
-            const ProcessGroupPointer &process_group,
-            const name_type &name) override;
+ protected:
+  name_type name(const bacs::process::Source &source) override;
 
-        executable_ptr create_executable(
-            const ContainerPointer &container,
-            bunsan::tempfile &&tmpdir,
-            const name_type &name) override;
+  ProcessPointer create_process(const ProcessGroupPointer &process_group,
+                                const name_type &name) override;
 
-    private:
-        std::string m_lang;
-        std::vector<std::string> m_flags;
-    };
-}}}
+  executable_ptr create_executable(const ContainerPointer &container,
+                                   bunsan::tempfile &&tmpdir,
+                                   const name_type &name) override;
+
+ private:
+  std::string m_lang;
+  std::vector<std::string> m_flags;
+};
+
+}  // namespace builders
+}  // namespace system
+}  // namespace bacs

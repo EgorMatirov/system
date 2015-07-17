@@ -15,94 +15,84 @@
 #include <string>
 #include <vector>
 
-namespace bacs{namespace system{namespace callback
-{
-    struct error: virtual system::error {};
-    struct serialization_error: virtual error {};
+namespace bacs {
+namespace system {
+namespace callback {
 
-    class base: private boost::noncopyable
-    BUNSAN_FACTORY_BEGIN(base, const std::vector<std::string> &/*arguments*/)
-    public:
-        virtual ~base() {}
+struct error : virtual system::error {};
+struct serialization_error : virtual error {};
 
-    public:
-        static base_ptr instance(const Callback &config);
+class base : private boost::noncopyable {
+  BUNSAN_FACTORY_BODY(base, const std::vector<std::string> & /*arguments*/)
+ public:
+  virtual ~base() {}
 
-    public:
-        typedef std::vector<unsigned char> data_type;
+ public:
+  static base_ptr instance(const Callback &config);
 
-    public:
-        virtual void call(const data_type &data)=0;
+ public:
+  using data_type = std::vector<unsigned char>;
 
-        template <typename T>
-        void call(const T &obj)
-        {
-            call(begin(obj), end(obj));
-        }
+ public:
+  virtual void call(const data_type &data) = 0;
 
-        template <typename Iter>
-        void call(const Iter &begin, const Iter &end)
-        {
-            typedef std::iterator_traits<Iter> traits;
-            typedef typename traits::value_type value_type;
-            static_assert(
-                sizeof(value_type) == sizeof(data_type::value_type),
-                "Sizes should be equal."
-            );
-            const std::function<data_type::value_type (const value_type)> to_uc =
-                [](const value_type c)
-                {
-                    return data_type::value_type(c);
-                };
-            call(data_type(boost::make_transform_iterator(begin, to_uc),
-                           boost::make_transform_iterator(end, to_uc)));
-        }
-    BUNSAN_FACTORY_END(base)
+  template <typename T>
+  void call(const T &obj) {
+    call(begin(obj), end(obj));
+  }
 
-    template <typename T>
-    class message_interface
-    {
-    public:
-        message_interface()=default;
-        message_interface(const message_interface &)=default;
-        message_interface &operator=(const message_interface &)=default;
+  template <typename Iter>
+  void call(const Iter &begin, const Iter &end) {
+    using traits = std::iterator_traits<Iter>;
+    using value_type = typename traits::value_type;
+    static_assert(sizeof(value_type) == sizeof(data_type::value_type),
+                  "Sizes should be equal.");
+    const std::function<data_type::value_type(const value_type)> to_uc =
+        [](const value_type c) { return data_type::value_type(c); };
+    call(data_type(boost::make_transform_iterator(begin, to_uc),
+                   boost::make_transform_iterator(end, to_uc)));
+  }
+};
+BUNSAN_FACTORY_TYPES(base)
 
-        explicit message_interface(const base_ptr &base_): m_base(base_) {}
+template <typename T>
+class message_interface {
+ public:
+  message_interface() = default;
+  message_interface(const message_interface &) = default;
+  message_interface &operator=(const message_interface &) = default;
 
-        explicit message_interface(const Callback &config):
-            message_interface(base::instance(config)) {}
+  explicit message_interface(const base_ptr &base_) : m_base(base_) {}
 
-        template <typename Y>
-        void assign(Y &&y)
-        {
-            message_interface(y).swap(*this);
-        }
+  explicit message_interface(const Callback &config)
+      : message_interface(base::instance(config)) {}
 
-        void swap(message_interface &iface) noexcept
-        {
-            using boost::swap;
-            swap(m_base, iface.m_base);
-        }
+  template <typename Y>
+  void assign(Y &&y) {
+    message_interface(y).swap(*this);
+  }
 
-        void call(const T &obj) const
-        {
-            call_(obj);
-        }
+  void swap(message_interface &iface) noexcept {
+    using boost::swap;
+    swap(m_base, iface.m_base);
+  }
 
-    private:
-        void call_(const google::protobuf::MessageLite &message) const
-        {
-            if (m_base)
-                m_base->call(message.SerializeAsString());
-        }
+  void call(const T &obj) const { call_(obj); }
 
-    private:
-        base_ptr m_base;
-    };
+ private:
+  void call_(const google::protobuf::MessageLite &message) const {
+    if (m_base) m_base->call(message.SerializeAsString());
+  }
 
-    template <typename T>
-    void swap(message_interface<T> &a, message_interface<T> &b) noexcept
-    {
-        a.swap(b);
-    }
-}}}
+ private:
+  base_ptr m_base;
+};
+
+template <typename T>
+void swap(message_interface<T> &a, message_interface<T> &b) noexcept {
+  a.swap(b);
+}
+
+}  // namespace callback
+}  // namespace system
+}  // namespace bacs

@@ -1,33 +1,34 @@
 #include "compilable.hpp"
 
-namespace bacs{namespace system{namespace builders
-{
-    class interpretable: public compilable
-    {
-    protected:
-        name_type name(const bacs::process::Source &source) override;
-    };
+namespace bacs {
+namespace system {
+namespace builders {
 
-    class interpretable_executable: public compilable_executable
-    {
-    public:
-        interpretable_executable(
-            const ContainerPointer &container,
-            bunsan::tempfile &&tmpdir,
-            const compilable::name_type &name,
-            const boost::filesystem::path &executable,
-            const std::vector<std::string> &flags_={});
+class interpretable : public compilable {
+ protected:
+  name_type name(const bacs::process::Source &source) override;
+};
 
-        ProcessPointer create(
-            const ProcessGroupPointer &process_group,
-            const ProcessArguments &arguments) override;
+class interpretable_executable : public compilable_executable {
+ public:
+  interpretable_executable(const ContainerPointer &container,
+                           bunsan::tempfile &&tmpdir,
+                           const compilable::name_type &name,
+                           const boost::filesystem::path &executable,
+                           const std::vector<std::string> &flags_ = {});
 
-    protected:
-        virtual std::vector<std::string> arguments() const;
-        virtual std::vector<std::string> flags() const;
+  ProcessPointer create(const ProcessGroupPointer &process_group,
+                        const ProcessArguments &arguments) override;
 
-    private:
-        const boost::filesystem::path m_executable;
-        const std::vector<std::string> m_flags;
-    };
-}}}
+ protected:
+  virtual std::vector<std::string> arguments() const;
+  virtual std::vector<std::string> flags() const;
+
+ private:
+  const boost::filesystem::path m_executable;
+  const std::vector<std::string> m_flags;
+};
+
+}  // namespace builders
+}  // namespace system
+}  // namespace bacs

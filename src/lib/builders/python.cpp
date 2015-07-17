@@ -5,61 +5,43 @@
 #include <boost/assert.hpp>
 #include <boost/regex.hpp>
 
-namespace bacs{namespace system{namespace builders
-{
-    BUNSAN_STATIC_INITIALIZER(bacs_system_builders_python,
-    {
-        BUNSAN_FACTORY_REGISTER_TOKEN(builder, python,
-            [](const std::vector<std::string> &arguments)
-            {
-                builder_ptr tmp(new python(arguments));
-                return tmp;
-            })
-    })
+namespace bacs {
+namespace system {
+namespace builders {
 
-    static const boost::regex positional("[^=]+"), key_value("([^=]+)=(.*)");
+BUNSAN_STATIC_INITIALIZER(bacs_system_builders_python, {
+  BUNSAN_FACTORY_REGISTER_TOKEN(
+      builder, python, [](const std::vector<std::string> &arguments) {
+        return builder::make_shared<python>(arguments);
+      })
+})
 
-    python::python(const std::vector<std::string> &arguments)
-    {
-        for (const std::string &arg: arguments)
-        {
-            boost::smatch match;
-            /*if (boost::regex_match(arg, match, positional))
-            {
-                BOOST_ASSERT(match.size() == 1);
-            }
-            else */if (boost::regex_match(arg, match, key_value))
-            {
-                BOOST_ASSERT(match.size() == 3);
-                const std::string key = match[1].str(),
-                                  value = match[2].str();
-                if (key == "lang")
-                {
-                    m_lang = value;
-                }
-                else
-                {
-                    BOOST_THROW_EXCEPTION(
-                        invalid_argument_error() <<
-                        invalid_argument_error::argument(arg));
-                }
-            }
-            else
-            {
-                BOOST_THROW_EXCEPTION(
-                    invalid_argument_error() <<
-                    invalid_argument_error::argument(arg));
-            }
-        }
+static const boost::regex positional("[^=]+"), key_value("([^=]+)=(.*)");
+
+python::python(const std::vector<std::string> &arguments) {
+  for (const std::string &arg : arguments) {
+    boost::smatch match;
+    if (boost::regex_match(arg, match, key_value)) {
+      BOOST_ASSERT(match.size() == 3);
+      const std::string key = match[1].str(), value = match[2].str();
+      if (key == "lang") {
+        m_lang = value;
+      } else {
+        BOOST_THROW_EXCEPTION(invalid_argument_error()
+                              << invalid_argument_error::argument(arg));
+      }
+    } else {
+      BOOST_THROW_EXCEPTION(invalid_argument_error()
+                            << invalid_argument_error::argument(arg));
     }
+  }
+}
 
-    ProcessPointer python::create_process(
-        const ProcessGroupPointer &process_group,
-        const name_type &name)
-    {
-        const ProcessPointer process =
-            process_group->createProcess("python" + m_lang);
-        process->setArguments(process->executable(), "-c", R"EOF(
+ProcessPointer python::create_process(const ProcessGroupPointer &process_group,
+                                      const name_type &name) {
+  const ProcessPointer process =
+      process_group->createProcess("python" + m_lang);
+  process->setArguments(process->executable(), "-c", R"EOF(
 import sys
 import py_compile
 
@@ -71,18 +53,19 @@ if __name__=='__main__':
         sys.stderr.write(e.msg)
         sys.exit(1)
 
-        )EOF", name.source);
-        return process;
-    }
+        )EOF",
+                        name.source);
+  return process;
+}
 
-    executable_ptr python::create_executable(
-        const ContainerPointer &container,
-        bunsan::tempfile &&tmpdir,
-        const name_type &name)
-    {
-        BOOST_ASSERT(m_flags.empty());
-        const executable_ptr tmp(new interpretable_executable(
-            container, std::move(tmpdir), name, "python" + m_lang));
-        return tmp;
-    }
-}}}
+executable_ptr python::create_executable(const ContainerPointer &container,
+                                         bunsan::tempfile &&tmpdir,
+                                         const name_type &name) {
+  BOOST_ASSERT(m_flags.empty());
+  return std::make_shared<interpretable_executable>(
+      container, std::move(tmpdir), name, "python" + m_lang);
+}
+
+}  // namespace builders
+}  // namespace system
+}  // namespace bacs

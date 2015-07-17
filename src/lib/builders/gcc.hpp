@@ -1,19 +1,22 @@
 #include "native_compilable.hpp"
 
-namespace bacs{namespace system{namespace builders
-{
-    class gcc: public native_compilable
-    {
-    public:
-        explicit gcc(const std::vector<std::string> &arguments);
+namespace bacs {
+namespace system {
+namespace builders {
 
-    protected:
-        ProcessPointer create_process(
-            const ProcessGroupPointer &process_group,
-            const name_type &name) override;
+class gcc : public native_compilable {
+ public:
+  explicit gcc(const std::vector<std::string> &arguments);
 
-    private:
-        std::string m_executable;
-        std::vector<std::string> m_flags;
-    };
-}}}
+ protected:
+  ProcessPointer create_process(const ProcessGroupPointer &process_group,
+                                const name_type &name) override;
+
+ private:
+  std::string m_executable;
+  std::vector<std::string> m_flags;
+};
+
+}  // namespace builders
+}  // namespace system
+}  // namespace bacs

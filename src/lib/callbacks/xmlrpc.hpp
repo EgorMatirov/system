@@ -6,19 +6,25 @@
 
 #include <utility>
 
-namespace bacs{namespace system{namespace callback{namespace callbacks
-{
-    class xmlrpc: public base
-    {
-    public:
-        explicit xmlrpc(const std::vector<std::string> &arguments);
+namespace bacs {
+namespace system {
+namespace callback {
+namespace callbacks {
 
-        void call(const data_type &data) override;
+class xmlrpc : public base {
+ public:
+  explicit xmlrpc(const std::vector<std::string> &arguments);
 
-    private:
-        xmlrpc_c::clientSimple m_proxy;
-        std::string m_uri;
-        std::string m_method;
-        xmlrpc_c::paramList m_arguments;
-    };
-}}}}
+  void call(const data_type &data) override;
+
+ private:
+  xmlrpc_c::clientSimple m_proxy;
+  std::string m_uri;
+  std::string m_method;
+  xmlrpc_c::paramList m_arguments;
+};
+
+}  // namespace callbacks
+}  // namespace callback
+}  // namespace system
+}  // namespace bacs
