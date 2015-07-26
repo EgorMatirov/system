@@ -12,7 +12,6 @@ endif()
 
 bunsan_add_library(${PROJECT_NAME}
     src/lib/builder.cpp
-    src/lib/callback.cpp
     src/lib/file.cpp
     src/lib/process.cpp
 
@@ -27,13 +26,10 @@ bunsan_add_library(${PROJECT_NAME}
 
     src/lib/builders/project.cpp
     src/lib/builders/mono_develop.cpp
-
-    src/lib/callbacks/xmlrpc.cpp
 )
 bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_utility bunsan_utility)
 bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_bacs_common bunsan_bacs_common)
 bunsan_use_bunsan_package(${PROJECT_NAME} yandex_contest_invoker yandex_contest_invoker)
-bunsan_use_package(${PROJECT_NAME} XMLRPC c++2 libwww-client)
 
 bunsan_install_headers()
 bunsan_install_targets(${PROJECT_NAME})
