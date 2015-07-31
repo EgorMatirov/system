@@ -15,7 +15,7 @@ namespace process {
 using namespace yandex::contest::invoker;
 
 #define RLIM_UPDATE(SRC, DST, TR) \
-  if (resource_limits.has_##SRC()) rlimit.DST = TR(resource_limits.SRC())
+  if (resource_limits.SRC()) rlimit.DST = TR(resource_limits.SRC())
 
 void setup(const yandex::contest::invoker::ProcessGroupPointer &process_group,
            const yandex::contest::invoker::ProcessPointer &process,
