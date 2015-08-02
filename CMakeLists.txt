@@ -14,6 +14,7 @@ bunsan_add_library(${PROJECT_NAME}
     src/lib/builder.cpp
     src/lib/file.cpp
     src/lib/process.cpp
+    src/lib/system_verifier.cpp
 
     src/lib/builders/compilable.cpp
     src/lib/builders/native_compilable.cpp
@@ -29,6 +30,7 @@ bunsan_add_library(${PROJECT_NAME}
 )
 bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_utility bunsan_utility)
 bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_bacs_common bunsan_bacs_common)
+bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_bacs_problem bunsan_bacs_problem)
 bunsan_use_bunsan_package(${PROJECT_NAME} yandex_contest_invoker yandex_contest_invoker)
 
 bunsan_install_headers()
