@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bacs/problem/common.hpp>
 #include <bacs/problem/problem.pb.h>
 #include <bacs/problem/result.pb.h>
 
