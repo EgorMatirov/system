@@ -30,7 +30,7 @@ static bool extract(const bacs::process::Source &source,
   BOOST_ASSERT(source.has_archiver());
 
   boost::property_tree::ptree config;
-  if (source.archiver().has_format())
+  if (!source.archiver().format().empty())
     config.put("format", source.archiver().format());
   system_resolver rs;
   const archiver_ptr ar = archiver::instance(source.archiver().type(), rs);
