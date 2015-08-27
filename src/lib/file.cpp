@@ -21,7 +21,9 @@ std::string read(const boost::filesystem::path &path,
     }
     char buf[4096];
     while (fin && data.size() < range.size()) {
-      fin.read(buf, std::min(sizeof(buf), range.size() - data.size()));
+      fin.read(buf,
+               std::min(static_cast<std::size_t>(sizeof(buf)),
+                        static_cast<std::size_t>(range.size() - data.size())));
       data.insert(data.end(), buf, buf + fin.gcount());
     }
   } BUNSAN_FILESYSTEM_FSTREAM_WRAP_END(fin)
