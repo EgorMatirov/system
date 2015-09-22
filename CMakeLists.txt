@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 include(${CMAKE_SOURCE_DIR}/system-config.cmake OPTIONAL)
 
-project(bunsan_bacs_system)
+project(bacs_system)
 
 if(BunsanCMakeBuiltin)
     BunsanCMakeLoad()
@@ -29,8 +29,8 @@ bunsan_add_library(${PROJECT_NAME}
     src/lib/builders/mono_develop.cpp
 )
 bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_utility bunsan_utility)
-bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_bacs_common bunsan_bacs_common)
-bunsan_use_bunsan_package(${PROJECT_NAME} bunsan_bacs_problem bunsan_bacs_problem)
+bunsan_use_bunsan_package(${PROJECT_NAME} bacs_common bacs_common)
+bunsan_use_bunsan_package(${PROJECT_NAME} bacs_problem bacs_problem)
 bunsan_use_bunsan_package(${PROJECT_NAME} yandex_contest_invoker yandex_contest_invoker)
 
 bunsan_install_headers()
