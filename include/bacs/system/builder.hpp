@@ -2,7 +2,8 @@
 
 #include <bacs/system/error.hpp>
 
-#include <bacs/process.pb.h>
+#include <bacs/process/resource.pb.h>
+#include <bacs/process/source.pb.h>
 
 #include <yandex/contest/invoker/Forward.hpp>
 #include <yandex/contest/system/unistd/access/Id.hpp>

@@ -1,6 +1,7 @@
 #pragma once
 
-#include <bacs/process.pb.h>
+#include <bacs/process/resource.pb.h>
+#include <bacs/process/source.pb.h>
 
 #include <yandex/contest/invoker/Process.hpp>
 #include <yandex/contest/invoker/ProcessGroup.hpp>
