@@ -80,6 +80,8 @@ def create_executable(output, executable, relative=False):
     executable = shlex.quote(executable)
     if relative:
         executable = '"$(dirname "$0")/"' + executable
+    with open(executable, 'a') as exe:
+        os.fchmod(exe.fileno(), os.fstat(exe.fileno()).st_mode | 0o111)
     with open(output, 'w') as out:
         print('#!/bin/sh -e', file=out)
         print('exec', executable, '"$@"', file=out)
