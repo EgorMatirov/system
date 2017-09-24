@@ -80,12 +80,15 @@ def create_executable(output, executable, relative=False):
     executable = shlex.quote(executable)
     if relative:
         executable = '"$(dirname "$0")/"' + executable
-    with open(executable, 'a') as exe:
-        os.fchmod(exe.fileno(), os.fstat(exe.fileno()).st_mode | 0o111)
     with open(output, 'w') as out:
         print('#!/bin/sh -e', file=out)
         print('exec', executable, '"$@"', file=out)
         os.fchmod(out.fileno(), os.fstat(out.fileno()).st_mode | 0o111)
+
+def set_execute_bit(binary):
+    binary = shlex.quote(binary)
+    with open(binary, 'a') as exe:
+        os.fchmod(exe.fileno(), os.fstat(exe.fileno()).st_mode | 0o111)
 
 
 if __name__ == '__main__':
@@ -116,6 +119,7 @@ if __name__ == '__main__':
         args.solution
     ])
     solution = Solution(args.solution)
+    set_execute_bit(solution.executable(args.configuration))
     if args.fhs:
         exe = args.executable or solution.exe_project.name
         application = args.application or solution.exe_project.name
