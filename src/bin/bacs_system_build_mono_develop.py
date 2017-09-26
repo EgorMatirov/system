@@ -86,7 +86,6 @@ def create_executable(output, executable, relative=False):
         os.fchmod(out.fileno(), os.fstat(out.fileno()).st_mode | 0o111)
 
 def set_execute_bit(binary):
-    binary = shlex.quote(binary)
     with open(binary, 'a') as exe:
         os.fchmod(exe.fileno(), os.fstat(exe.fileno()).st_mode | 0o111)
 
