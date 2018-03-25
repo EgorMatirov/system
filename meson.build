@@ -25,6 +25,7 @@ srcs = [
     'src/lib/builders/python.cpp',
     'src/lib/builders/java.cpp',
     'src/lib/builders/mono.cpp',
+    'src/lib/builders/kturle.cpp',
 
     'src/lib/builders/project.cpp',
     'src/lib/builders/mono_develop.cpp',
